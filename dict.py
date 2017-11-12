@@ -1,11 +1,9 @@
 import codecs
 import datrie
+import csv 
 
-f = codecs.open('odict.csv', "r", 'cp1251')
-odict = f.read().split("\r\n")
-odict = [i.split(",") for i in odict if len(i.split(",")) >= 1 ]
-
-# odict: [[lexeme, tag, slovofoms...]...]
+russian = 'абвгдеёжзиклмнопрстуфхцчъыьэюя'
+trie = datrie.Trie(russian)
 
 # pr: part of speech
 pr = {}
@@ -33,14 +31,12 @@ pr['со'] = 'S'
 pr['жо'] = 'S'
 pr['с'] = 'S'
 
-russian = 'абвгдеёжзиклмнопрстуфхцчъыьэюя'
-trie = datrie.Trie(russian)
-for row in odict:
-    for i in range(len(row)): 
-        if i != 1 and row[i] != '':
-            trie[row[i]] = row[0] + "=" + pr[row[1]]
-
+with codecs.open('odict.csv', "r", 'cp1251') as lexemes:
+    reader = csv.reader(lexemes, delimiter=',')
+    for row in reader:
+        for i in range(len(row)): 
+            if i != 1 and row[i] != '':
+                trie[row[i]] = row[0] + "=" + pr[row[1]]
+        
 fin = "авторитаризме"
 print(fin + "{" + trie[fin] + "}")
-
-f.close()
