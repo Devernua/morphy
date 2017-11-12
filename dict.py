@@ -37,6 +37,4 @@ with codecs.open('odict.csv', "r", 'cp1251') as lexemes:
         for i in range(len(row)): 
             if i != 1 and row[i] != '':
                 trie[row[i]] = row[0] + "=" + pr[row[1]]
-        
-fin = "авторитаризме"
-print(fin + "{" + trie[fin] + "}")
+trie.save("odict.trie")
