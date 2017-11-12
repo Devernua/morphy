@@ -1,8 +1,9 @@
 import codecs
+import datrie
 
 f = codecs.open('odict.csv', "r", 'cp1251')
 odict = f.read().split("\r\n")
-odict = [[i.split(",")] for i in odict if len(i.split(",")) >= 1 ]
+odict = [i.split(",") for i in odict if len(i.split(",")) >= 1 ]
 
 # odict: [[lexeme, tag, slovofoms...]...]
 
@@ -30,6 +31,16 @@ pr['нсв'] = 'V'
 pr['св'] = 'V'
 pr['со'] = 'S'
 pr['жо'] = 'S'
-pr['c'] = 'S'
+pr['с'] = 'S'
+
+russian = 'абвгдеёжзиклмнопрстуфхцчъыьэюя'
+trie = datrie.Trie(russian)
+for row in odict:
+    for i in range(len(row)): 
+        if i != 1 and row[i] != '':
+            trie[row[i]] = row[0] + "=" + pr[row[1]]
+
+fin = "авторитаризме"
+print(fin + "{" + trie[fin] + "}")
 
 f.close()
