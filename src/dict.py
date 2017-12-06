@@ -1,3 +1,5 @@
+# this script make trie from odict.csv
+
 import codecs
 import datrie
 import csv 
@@ -31,10 +33,14 @@ pr['со'] = 'S'
 pr['жо'] = 'S'
 pr['с'] = 'S'
 
-with codecs.open('odict.csv', "r", 'cp1251') as lexemes:
+# make trie from odict dataset
+with codecs.open('../data/odict.csv', "r", 'cp1251') as lexemes:
     reader = csv.reader(lexemes, delimiter=',')
     for row in reader:
         for i in range(len(row)): 
-            if i != 1 and row[i] != '':
+            # skip empty and delimeter element
+            if i != 1 and row[i] != '': 
+                # trie value form like: infinitive=ADV
                 trie[row[i]] = row[0] + "=" + pr[row[1]]
-trie.save("odict.trie")
+
+trie.save("../data/odict.trie")

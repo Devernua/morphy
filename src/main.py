@@ -1,9 +1,14 @@
+# this script print to stdout lemmatization of test file
+
 import datrie
 import re
+import sys
 
-trie = datrie.Trie.load("odict.trie")
+test_name = sys.argv[1] if len(sys.argv) > 1 else sys.exit("Put test filename")
 
-with open('test.txt', 'r') as f:
+trie = datrie.Trie.load("../data/odict.trie")
+
+with open(test_name, 'r') as f:
     text = f.read().split('\n')
     for row in text:
         if (len(row) == 0):
@@ -16,5 +21,4 @@ with open('test.txt', 'r') as f:
             else:
                 print(lexeme +"{" + lexeme + "=S}", end=' ')
         print()
-
 
