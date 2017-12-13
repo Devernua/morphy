@@ -1,10 +1,9 @@
 # script for online indexing document and search data in it
 
-import sys
 import datrie
 import re
 import socket
-
+import json
 
 trie = datrie.Trie.load("../data/odict.trie")
 print("trie loaded")
@@ -24,21 +23,20 @@ def listen():
             for row_i, row in enumerate(data.split("\n")):
                 if len(row) == 0:
                     continue
-                for lexeme in re.findall(r"[\w']+", row):
+                for l_i, lexeme in enumerate(re.findall(r"[\w']+", row)):
                     if len(lexeme) == 0:
                         continue
                     lex = lexeme.lower()
                     if lex in trie:
                         lex = trie[lex].split("=")[0]
                     if lex in indexed:
-                        indexed[lex].append(row_i)
+                        indexed[lex].append([row_i, l_i])
                     else:
-                        indexed[lex] = [row_i]
+                        indexed[lex] = [[row_i, l_i]]
 
-            current_connection.send(str(indexed).encode("utf-8"))
+            current_connection.send(json.dumps(indexed).encode("utf-8"))
             current_connection.close()
             break
-            print("indexed:\n", indexed)
 
 
 listen()
